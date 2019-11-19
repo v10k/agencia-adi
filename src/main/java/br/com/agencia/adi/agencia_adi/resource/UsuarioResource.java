@@ -23,19 +23,14 @@ public class UsuarioResource {
 	@Path("user/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel ObterCliente(@PathParam("id") int id) {
-		UsuarioDAO dao = new UsuarioDAO();
-		UsuarioModel usuario = dao.ObterCliente(id);
-		return usuario;
+		return dao.ObterCliente(id);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/allusers")
-	public List<UsuarioModel> getUsers() {
-		System.out.println("no user/resource/all");
-		UsuarioDAO dao = new UsuarioDAO(); 
-		List<UsuarioModel> lista = dao.ListarCliente();
-		return lista;
+	public List<UsuarioModel> ListarCliente() {
+		return dao.ListarCliente();
 	}
 	
 	@POST
@@ -43,7 +38,6 @@ public class UsuarioResource {
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel CadastrarCliente(UsuarioModel usuario) {
-		UsuarioDAO dao = new UsuarioDAO();
 		return dao.CadastrarCliente(usuario);
 	}
 	
@@ -52,15 +46,12 @@ public class UsuarioResource {
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel EditarCliente(UsuarioModel usuario) {
-		UsuarioDAO dao = new UsuarioDAO();
-		usuario = dao.EditarCliente(usuario);
-		return usuario;
+		return dao.EditarCliente(usuario);
 	}
 	
 	@DELETE
 	@Path("/user/{id}")
 	public Boolean DeletarCliente(@PathParam("id") int id) {
-		UsuarioDAO dao = new UsuarioDAO();
 		return dao.DeletarCliente(id);
 	}
 }

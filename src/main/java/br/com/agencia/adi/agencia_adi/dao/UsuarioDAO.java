@@ -54,9 +54,9 @@ public class UsuarioDAO {
 		String sql = "DELETE FROM Usuario WHERE id_user = " +id;
 		try {
 			st = conn.createStatement();
-			st.execute(sql);
+			int deletado = st.executeUpdate(sql);
 			st.close();
-			return true;
+			return (deletado != 0) ? true : false;
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao deletar usuário: "+erro);
 		}
@@ -83,7 +83,7 @@ public class UsuarioDAO {
 	}
 	
 	public UsuarioModel ObterCliente(int id_usuario) {
-		String sql = "SELECT * FROM Usuario WHERE id_user LIKE '%"+id_usuario+"%'";
+		String sql = "SELECT * FROM Usuario WHERE id_user = '"+id_usuario+"'";
 		UsuarioModel usuario = new UsuarioModel();
 		try {
 			st = conn.createStatement();
