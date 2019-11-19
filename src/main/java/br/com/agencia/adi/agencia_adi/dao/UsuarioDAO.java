@@ -28,37 +28,40 @@ public class UsuarioDAO {
 			stmt.execute();
 			stmt.close();
 		} catch(Exception erro) {
-			throw new RuntimeException("Erro ao cadastrar usuário: "+erro);
+			throw new RuntimeException("Erro ao cadastrar usuário: " +erro);
 		}
 		return usuario;
 	}
 	
-//	public void alterar(Produto produto) {
-//		String sql = "UPDATE produto SET nome_produto = ?, descricao_produto = ?, preco = ? WHERE id_produto = ?";
-//		try {
-//			stmt = conn.prepareStatement(sql);
-//			stmt.setString(1, produto.getNome_produto());
-//			stmt.setString(2, produto.getDescricao_produto());
-//			stmt.setDouble(3, produto.getPreco());
-//			stmt.setInt(4, produto.getId_produto());
-//			stmt.execute();
-//			stmt.close();
-//		} catch(Exception erro) {
-//			throw new RuntimeException("Erro 3: "+erro);
-//		}
-//	}
-//	
-//	public void excluir(int id) {
-//		String sql = "DELETE FROM produto WHERE id_produto = " +id;
-//		try {
-//			st = conn.createStatement();
-//			st.execute(sql);
-//			st.close();
-//		} catch(Exception erro) {
-//			throw new RuntimeException("Erro 4: "+erro);
-//		}
-//	}
-//	
+	public UsuarioModel EditarCliente(UsuarioModel usuario) {
+		String sql = "UPDATE Usuario SET nome_user = ?, email = ?, admin = ?, senha = ? WHERE id_user = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, usuario.getNome_user());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setBoolean(3, usuario.getAdmin());
+			stmt.setString(4, usuario.getSenha());
+			stmt.setInt(5, usuario.getId_user());
+			stmt.execute();
+			stmt.close();
+		} catch(Exception erro) {
+			throw new RuntimeException("Erro ao editar usuário: " +erro);
+		}
+		return usuario;
+	}
+	
+	public Boolean DeletarCliente(int id) {
+		String sql = "DELETE FROM Usuario WHERE id_user = " +id;
+		try {
+			st = conn.createStatement();
+			st.execute(sql);
+			st.close();
+			return true;
+		} catch(Exception erro) {
+			throw new RuntimeException("Erro ao deletar usuário: "+erro);
+		}
+	}
+	
 
 	public ArrayList<UsuarioModel> ListarCliente() {
 		String sql = "SELECT * FROM Usuario";
