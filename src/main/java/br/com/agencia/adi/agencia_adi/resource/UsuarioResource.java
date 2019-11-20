@@ -35,6 +35,7 @@ public class UsuarioResource {
 	UsuarioDAO dao = new UsuarioDAO();
 	
 	@GET
+	@Seguro
 	@Path("user/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel ObterCliente(@PathParam("id") int id) {
@@ -59,6 +60,7 @@ public class UsuarioResource {
 	
 	@PUT
 	@Path("/user")
+	@Seguro
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel EditarCliente(UsuarioModel usuario) {
@@ -66,6 +68,7 @@ public class UsuarioResource {
 	}
 	
 	@DELETE
+	@Seguro({NivelPermissao.ADM})
 	@Path("/user/{id}")
 	public Boolean DeletarCliente(@PathParam("id") int id) {
 		return dao.DeletarCliente(id);

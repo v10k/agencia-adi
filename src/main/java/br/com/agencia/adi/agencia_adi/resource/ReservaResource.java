@@ -12,7 +12,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import br.com.agencia.adi.agencia_adi.Seguro;
 import br.com.agencia.adi.agencia_adi.dao.ReservaDAO;
+import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
 import br.com.agencia.adi.agencia_adi.model.ReservaModel;
 
 @Path("reservaresource")
@@ -21,6 +23,7 @@ public class ReservaResource {
 	ReservaDAO dao = new ReservaDAO();
 	
 	@POST
+	@Seguro({NivelPermissao.USUARIO})
 	@Path("/requestroom")
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -29,6 +32,7 @@ public class ReservaResource {
 	}
 	
 	@GET
+	@Seguro
 	@Path("requestroom/{data}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ReservaModel> ListarSalas(@PathParam("data") String data) {
@@ -37,6 +41,7 @@ public class ReservaResource {
 	
 	
 	@GET
+	@Seguro
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/allrequests")
 	public List<ReservaModel> getRequests() {
@@ -44,6 +49,7 @@ public class ReservaResource {
 	}
 	
 	@GET
+	@Seguro({NivelPermissao.USUARIO})
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/userrequests/{id}")
 	public List<ReservaModel> getUserRequests(@PathParam("id") int id) {
@@ -51,6 +57,7 @@ public class ReservaResource {
 	}	
 
 	@DELETE
+	@Seguro({NivelPermissao.ADM})
 	@Path("/requestroom/{id}/{data}")
 	public Boolean CancelarAgendamento(@PathParam("id") int id, @PathParam("data") Date data_reserva) {
 		return dao.CancelarAgendamento(id, data_reserva);
