@@ -2,8 +2,7 @@ package br.com.agencia.adi.agencia_adi.resource;
 
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
+
 import javax.json.Json;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,16 +12,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-
-import com.google.gson.Gson;
 
 import br.com.agencia.adi.agencia_adi.Seguro;
 import br.com.agencia.adi.agencia_adi.dao.AdmDAO;
@@ -32,7 +24,6 @@ import br.com.agencia.adi.agencia_adi.dao.UsuarioDAO;
 import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
 import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
 
-@PermitAll
 @Path("usuarioresource")
 public class UsuarioResource {
 

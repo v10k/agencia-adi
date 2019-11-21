@@ -1,11 +1,12 @@
 package br.com.agencia.adi.agencia_adi.dao;
 
 import br.com.agencia.adi.agencia_adi.model.ReservaModel;
+import br.com.agencia.adi.agencia_adi.Observer;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ReservaDAO {
+public class ReservaDAO implements Observer {
 	
 	private Connection conn;
 	private PreparedStatement stmt;
@@ -13,7 +14,7 @@ public class ReservaDAO {
 	private ResultSet rs;
 	private ArrayList<ReservaModel> lista = new ArrayList<>();
 	
-	public ReservaDAO() {
+	public ReservaDAO()  {
 		conn = new ConectaBanco().getConexao();
 	}
 	
@@ -99,8 +100,32 @@ public class ReservaDAO {
 		}
 		return lista;
 	}
-
+	 
+	public void update(int id) {
+		ArrayList<ReservaModel> lista = ListarReservasPeloID(id);
+		 for (ReservaModel l : lista) {
+			 this.CancelarAgendamento(l.getId_sala(), l.getData_reserva());
+		 }
+	}
 	
+	private ArrayList<ReservaModel> ListarReservasPeloID(int id) {
+		String sql = "SELECT * FROM Reserva WHERE id_sala = " +id;
+		try {
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			while (rs.next()) {
+				ReservaModel reserva = new ReservaModel();
+				reserva.setId_reserva(rs.getInt("id_reserva"));
+				reserva.setId_user(rs.getInt("id_user"));
+				reserva.setId_sala(rs.getInt("id_sala"));
+				reserva.setData_reserva(rs.getDate("data_reserva"));
+				lista.add(reserva);
+			}
+		} catch(Exception erro) {
+			throw new RuntimeException("Erro : "+erro);
+		}
+		return lista;
+	}	
 	
 //	public SalaModel ObterSala(int id_sala) {
 //		String sql = "SELECT * FROM Sala WHERE id_sala LIKE '%"+id_sala+"%'";

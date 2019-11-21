@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.agencia.adi.agencia_adi.Seguro;
+import br.com.agencia.adi.agencia_adi.dao.ReservaDAO;
 import br.com.agencia.adi.agencia_adi.dao.SalaDAO;
 import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
 import br.com.agencia.adi.agencia_adi.model.SalaModel;
@@ -68,6 +69,8 @@ public class SalaResource {
 	@Seguro({NivelPermissao.ADM})
 	@Path("/room/{id}")
 	public Response DeletarSala(@PathParam("id") int id) {
+		ReservaDAO reserva = new ReservaDAO();
+		dao.registerObserver(reserva);
 		if (dao.DeletarSala(id)) {
 			return Response.ok("Sala deletada com sucesso").build();
 		} 

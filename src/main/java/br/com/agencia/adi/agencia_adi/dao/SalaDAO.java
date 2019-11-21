@@ -1,17 +1,20 @@
 package br.com.agencia.adi.agencia_adi.dao;
 
 import br.com.agencia.adi.agencia_adi.model.SalaModel;
+import br.com.agencia.adi.agencia_adi.Observable;
+import br.com.agencia.adi.agencia_adi.Observer;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class SalaDAO {
+public class SalaDAO implements Observable  {
 	
 	private Connection conn;
 	private PreparedStatement stmt;
 	private Statement st;
 	private ResultSet rs;
 	private ArrayList<SalaModel> lista = new ArrayList<>();
+	private ArrayList<Observer> observers = new ArrayList<>();
 	
 	public SalaDAO() {
 		conn = new ConectaBanco().getConexao();
@@ -58,6 +61,7 @@ public class SalaDAO {
 			st = conn.createStatement();
 			int deletado = st.executeUpdate(sql);
 			st.close();
+			 this.notifyObservers(id);
 			return (deletado != 0) ? true : false;
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao deletar sala: "+erro);
@@ -126,5 +130,19 @@ public class SalaDAO {
 		}
 		return sala;
 	}
+		
+	  public void registerObserver(Observer observer) {
+          observers.add(observer);
+     }
+	  
+	  public void removeObserver(Observer observer) {
+          observers.remove(observer);
+     }
+	  
+	  public void notifyObservers(int id) {
+        for (Observer ob : observers) {
+        	ob.update(id);
+        }
+	  }
 	
 }
