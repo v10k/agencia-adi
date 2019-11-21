@@ -21,8 +21,19 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-            </plugin>
-        </plugins>
+             </plugin>
+             <plugin>
+			    <groupId>org.eclipse.jetty</groupId>
+			    <artifactId>jetty-maven-plugin</artifactId>
+			    <version>9.4.22.v20191022</version>
+			    <configuration>
+			    <scanIntervalSeconds>1000</scanIntervalSeconds>
+			    <webApp>
+			      <contextPath>/agencia-adi</contextPath>
+			    </webApp>
+			  </configuration>
+    		</plugin>
+      </plugins>
     </build>
 
    <dependencyManagement>

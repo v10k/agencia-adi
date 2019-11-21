@@ -3,7 +3,6 @@ package br.com.agencia.adi.agencia_adi.dao;
 import br.com.agencia.adi.agencia_adi.model.ReservaModel;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ReservaDAO {
@@ -83,7 +82,7 @@ public class ReservaDAO {
 	
 
 	public ArrayList<ReservaModel> ListarReservas(int...id) {
-		String sql = (id.length > 0) ? "SELECT * FROM Reserva WHERE id_user = '"+id[0]+"'" : "SELECT * FROM Reserva";
+		String sql = (id.length > 0) ? "SELECT * FROM Reserva WHERE id_user = '"+id[0]+"' ORDER BY data_reserva DESC, id_sala ASC" : "SELECT * FROM Reserva ORDER BY data_reserva DESC, id_sala ASC";
 		try {
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);

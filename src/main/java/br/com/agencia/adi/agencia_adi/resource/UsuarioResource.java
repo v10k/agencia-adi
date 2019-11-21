@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.json.Json;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,7 +43,7 @@ public class UsuarioResource {
 		return dao.ObterCliente(id);
 	}
 	
-	@Seguro({NivelPermissao.ADM, NivelPermissao.USUARIO})
+	@Seguro({NivelPermissao.ADM})
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/allusers")
@@ -67,11 +68,15 @@ public class UsuarioResource {
 		return dao.EditarCliente(usuario);
 	}
 	
-	@DELETE
 	@Seguro({NivelPermissao.ADM})
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/user/{id}")
-	public Boolean DeletarCliente(@PathParam("id") int id) {
-		return dao.DeletarCliente(id);
+	public Response DeletarCliente(@PathParam("id") int id) {
+		if (dao.DeletarCliente(id)) {
+			return Response.ok("Deletado com sucesso").build();
+		} 
+		return Response.status(Response.Status.NOT_FOUND).entity("Não foi possível deletar usuário").build();			
 	}
 	
 
@@ -83,8 +88,10 @@ public class UsuarioResource {
 		System.out.println(usuario);
 		try {
 			if (dao.Login(usuario) == true) {
-				String token = dao.gerarToken(usuario.getEmail(),1);
-				return Response.ok(token).build();
+				String token = dao.gerarToken(usuario.getEmail(), 1);
+				usuario = dao.ObterCliente(usuario.getEmail());
+				String json = Json.createObjectBuilder().add("token", token).add("id_usuario", usuario.getId_user()).build().toString();
+				return Response.ok(json).build();
 			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
 			}

@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import br.com.agencia.adi.agencia_adi.Seguro;
 import br.com.agencia.adi.agencia_adi.dao.SalaDAO;
@@ -66,7 +67,10 @@ public class SalaResource {
 	@DELETE
 	@Seguro({NivelPermissao.ADM})
 	@Path("/room/{id}")
-	public Boolean DeletarSala(@PathParam("id") int id) {
-		return dao.DeletarSala(id);
+	public Response DeletarSala(@PathParam("id") int id) {
+		if (dao.DeletarSala(id)) {
+			return Response.ok("Sala deletada com sucesso").build();
+		} 
+		return Response.status(Response.Status.NOT_FOUND).entity("Não foi possível deletar sala").build();			
 	}
 }

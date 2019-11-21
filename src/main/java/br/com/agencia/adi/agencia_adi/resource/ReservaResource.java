@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import br.com.agencia.adi.agencia_adi.Seguro;
 import br.com.agencia.adi.agencia_adi.dao.ReservaDAO;
@@ -57,9 +58,12 @@ public class ReservaResource {
 	}	
 
 	@DELETE
-	@Seguro({NivelPermissao.ADM})
+	@Seguro({NivelPermissao.ADM, NivelPermissao.USUARIO})
 	@Path("/requestroom/{id}/{data}")
-	public Boolean CancelarAgendamento(@PathParam("id") int id, @PathParam("data") Date data_reserva) {
-		return dao.CancelarAgendamento(id, data_reserva);
+	public Response CancelarAgendamento(@PathParam("id") int id, @PathParam("data") Date data_reserva) {
+		if (dao.CancelarAgendamento(id, data_reserva)) {
+			return Response.ok("Sala deletada com sucesso").build();
+		} 
+		return Response.status(Response.Status.NOT_FOUND).entity("Não foi possível deletar sala").build();	
 	}
 }

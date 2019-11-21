@@ -18,9 +18,8 @@ import javax.xml.bind.DatatypeConverter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class UsuarioDAO {
+public class ClienteDAO {
 	
-	public  IUsuario Iusuario;
 	private Connection conn;
 	private PreparedStatement stmt;
 	private Statement st;
@@ -28,7 +27,7 @@ public class UsuarioDAO {
 	private ArrayList<UsuarioModel> lista = new ArrayList<>();
 	private static final String FRASE_SEGREDO = "41A518402BA6C85B63E8CCC1BC321EE99945A1784CB1D16612CF6F471FEA46836F90601B0E66AF968B821F67747D7844EA030E2F8D8841238724E6AA1A6F4A6B";
 	
-	public UsuarioDAO() {
+	public ClienteDAO() {
 		conn = new ConectaBanco().getConexao();
 	}
 	
@@ -184,5 +183,4 @@ public class UsuarioDAO {
 		}
 		return NivelPermissao.USUARIO;
 	}
-	
 }
