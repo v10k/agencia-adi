@@ -22,6 +22,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import javax.ws.rs.ext.Provider;
 
+import br.com.agencia.adi.agencia_adi.dao.AdmDAO;
+import br.com.agencia.adi.agencia_adi.dao.IUsuario;
 import br.com.agencia.adi.agencia_adi.dao.UsuarioDAO;
 
 import io.jsonwebtoken.Claims;
@@ -43,7 +45,10 @@ public class FiltroAutenticacao implements ContainerRequestFilter{
 		
 	String token = authorizationHeader.substring("Bearer".length()).trim();
 	try {
-		Claims claims = new UsuarioDAO().validaToken(token);
+		UsuarioDAO usuariodao = new UsuarioDAO();
+		IUsuario usuario = new AdmDAO();
+		usuariodao.Iusuario = usuario;
+		Claims claims = usuariodao.validaToken(token);
 		if(claims==null)
 			throw new Exception("Token inválido");
 			modificarRequestContext(requestContext,claims.getIssuer());

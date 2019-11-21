@@ -1,24 +1,25 @@
 package br.com.agencia.adi.agencia_adi.dao;
 
-import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
-
-
-import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
+import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
+import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
-public class ClienteDAO implements IUsuario {
+public class AdmDAO implements IUsuario {
 	
 	private Connection conn;
 	private PreparedStatement stmt;
@@ -27,7 +28,7 @@ public class ClienteDAO implements IUsuario {
 	private ArrayList<UsuarioModel> lista = new ArrayList<>();
 	private static final String FRASE_SEGREDO = "41A518402BA6C85B63E8CCC1BC321EE99945A1784CB1D16612CF6F471FEA46836F90601B0E66AF968B821F67747D7844EA030E2F8D8841238724E6AA1A6F4A6B";
 	
-	public ClienteDAO() {
+	public AdmDAO() {
 		conn = new ConectaBanco().getConexao();
 	}
 	
@@ -48,13 +49,14 @@ public class ClienteDAO implements IUsuario {
 	}
 	
 	public UsuarioModel EditarCliente(UsuarioModel usuario) {
-		String sql = "UPDATE Usuario SET nome_user = ?, email = ?, senha = ? WHERE id_user = ?";
+		String sql = "UPDATE Usuario SET nome_user = ?, email = ?, admin = ?, senha = ? WHERE id_user = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, usuario.getNome_user());
 			stmt.setString(2, usuario.getEmail());
-			stmt.setString(3, usuario.getSenha());
-			stmt.setInt(4, usuario.getId_user());
+			stmt.setBoolean(3, usuario.getAdmin());
+			stmt.setString(4, usuario.getSenha());
+			stmt.setInt(5, usuario.getId_user());
 			stmt.execute();
 			stmt.close();
 		} catch(Exception erro) {
@@ -73,6 +75,7 @@ public class ClienteDAO implements IUsuario {
 				usuario.setId_user(rs.getInt("id_user"));
 				usuario.setNome_user(rs.getString("nome_user"));
 				usuario.setEmail(rs.getString("email"));
+				usuario.setAdmin(rs.getBoolean("admin"));
 				usuario.setSenha(rs.getString("senha"));
 			}
 		} catch(Exception erro) {
@@ -90,6 +93,7 @@ public class ClienteDAO implements IUsuario {
 			while (rs.next()) {
 				usuario.setId_user(rs.getInt("id_user"));
 				usuario.setNome_user(rs.getString("nome_user"));
+				usuario.setAdmin(rs.getBoolean("admin"));
 				usuario.setEmail(rs.getString("email"));
 				usuario.setSenha(rs.getString("senha"));
 			}
@@ -140,19 +144,44 @@ public class ClienteDAO implements IUsuario {
 		}
 	}
 	
-	public ArrayList<UsuarioModel> ListarCliente() {
-		return lista;
-	}
-	
-	public Boolean DeletarCliente(int id) {
-		return false;
-	}
-	
 	public NivelPermissao buscarNivelPermissao(String email) {
 		UsuarioModel usuario = this.ObterCliente(email);
 		if (usuario.getAdmin()) {
 			return NivelPermissao.ADM;			
 		}
 		return NivelPermissao.USUARIO;
+	}
+	
+	public Boolean DeletarCliente(int id) {
+		String sql = "DELETE FROM Usuario WHERE id_user = " +id;
+		try {
+			st = conn.createStatement();
+			int deletado = st.executeUpdate(sql);
+			st.close();
+			return (deletado != 0) ? true : false;
+		} catch(Exception erro) {
+			throw new RuntimeException("Erro ao deletar usuário: "+erro);
+		}
+		
+	}
+	
+
+	public ArrayList<UsuarioModel> ListarCliente() {
+		String sql = "SELECT * FROM Usuario";
+		try {
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			while (rs.next()) {
+				UsuarioModel usuario = new UsuarioModel();
+				usuario.setId_user(rs.getInt("id_user"));
+				usuario.setNome_user(rs.getString("nome_user"));
+				usuario.setEmail(rs.getString("email"));
+				usuario.setAdmin(rs.getBoolean("admin"));
+				lista.add(usuario);
+			}
+		} catch(Exception erro) {
+			throw new RuntimeException("Erro : "+erro);
+		}
+		return lista;
 	}
 }

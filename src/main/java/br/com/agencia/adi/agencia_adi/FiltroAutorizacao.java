@@ -27,7 +27,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
-
+import br.com.agencia.adi.agencia_adi.dao.AdmDAO;
+import br.com.agencia.adi.agencia_adi.dao.IUsuario;
 import br.com.agencia.adi.agencia_adi.dao.UsuarioDAO;
 
 import javax.ws.rs.Priorities;
@@ -80,7 +81,10 @@ public class FiltroAutorizacao implements ContainerRequestFilter {
 			return;
 		
 		boolean temPermissao = false;
-		NivelPermissao nivelPermissaoUsuario = new UsuarioDAO().buscarNivelPermissao(login);			
+		UsuarioDAO usuariodao = new UsuarioDAO();
+		IUsuario usuario =  new AdmDAO();
+		usuariodao.Iusuario = usuario;
+		NivelPermissao nivelPermissaoUsuario = usuariodao.buscarNivelPermissao(login);			
 		for (NivelPermissao nivelPermissao : nivelPermissaoPermitidos) {
 			if(nivelPermissao.equals(nivelPermissaoUsuario)) {
 				temPermissao = true;

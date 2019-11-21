@@ -25,6 +25,9 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import com.google.gson.Gson;
 
 import br.com.agencia.adi.agencia_adi.Seguro;
+import br.com.agencia.adi.agencia_adi.dao.AdmDAO;
+import br.com.agencia.adi.agencia_adi.dao.ClienteDAO;
+import br.com.agencia.adi.agencia_adi.dao.IUsuario;
 import br.com.agencia.adi.agencia_adi.dao.UsuarioDAO;
 import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
 import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
@@ -34,12 +37,14 @@ import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
 public class UsuarioResource {
 
 	UsuarioDAO dao = new UsuarioDAO();
+	IUsuario tipo = new ClienteDAO();
 	
 	@GET
 	@Seguro
 	@Path("user/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel ObterCliente(@PathParam("id") int id) {
+		dao.Iusuario = tipo;
 		return dao.ObterCliente(id);
 	}
 	
@@ -48,6 +53,8 @@ public class UsuarioResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/allusers")
 	public List<UsuarioModel> ListarCliente() {
+		tipo = new AdmDAO();
+		dao.Iusuario = tipo;
 		return dao.ListarCliente();
 	}
 	
@@ -56,6 +63,7 @@ public class UsuarioResource {
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel CadastrarCliente(UsuarioModel usuario) {
+		dao.Iusuario = tipo;
 		return dao.CadastrarCliente(usuario);
 	}
 	
@@ -65,6 +73,7 @@ public class UsuarioResource {
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Produces(MediaType.APPLICATION_JSON)
 	public UsuarioModel EditarCliente(UsuarioModel usuario) {
+		dao.Iusuario = tipo;
 		return dao.EditarCliente(usuario);
 	}
 	
@@ -73,6 +82,8 @@ public class UsuarioResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/user/{id}")
 	public Response DeletarCliente(@PathParam("id") int id) {
+		tipo = new AdmDAO();
+		dao.Iusuario = tipo;
 		if (dao.DeletarCliente(id)) {
 			return Response.ok("Deletado com sucesso").build();
 		} 
@@ -85,7 +96,7 @@ public class UsuarioResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response fazerLogin(UsuarioModel usuario){
-		System.out.println(usuario);
+		dao.Iusuario = tipo;
 		try {
 			if (dao.Login(usuario) == true) {
 				String token = dao.gerarToken(usuario.getEmail(), 1);
