@@ -1,8 +1,8 @@
--- MariaDB dump 10.17  Distrib 10.4.8-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.17  Distrib 10.4.10-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: agencia-adi
 -- ------------------------------------------------------
--- Server version	10.4.8-MariaDB
+-- Server version	10.4.10-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,20 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Historico`
+--
+
+DROP TABLE IF EXISTS `Historico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Historico` (
+  `acao` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` date NOT NULL,
+  `mudanca` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `Reserva`
@@ -28,17 +42,8 @@ CREATE TABLE `Reserva` (
   `id_sala` int(11) NOT NULL,
   `data_reserva` date NOT NULL,
   PRIMARY KEY (`id_reserva`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reserva`
---
-
-LOCK TABLES `Reserva` WRITE;
-/*!40000 ALTER TABLE `Reserva` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Reserva` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Sala`
@@ -55,17 +60,8 @@ CREATE TABLE `Sala` (
   `capacidade_sala` int(11) NOT NULL,
   `andar_sala` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_sala`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Sala`
---
-
-LOCK TABLES `Sala` WRITE;
-/*!40000 ALTER TABLE `Sala` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Sala` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Usuario`
@@ -79,19 +75,11 @@ CREATE TABLE `Usuario` (
   `nome_user` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `senha` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `admin` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `admin` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `Usuario_UN` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Usuario`
---
-
-LOCK TABLES `Usuario` WRITE;
-/*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'agencia-adi'
@@ -106,4 +94,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-18 17:59:42
+-- Dump completed on 2019-11-22  2:47:11

@@ -61,7 +61,7 @@ public class ReservaResource {
 	@Path("/requestroom/{id}/{data}")
 	public Response CancelarAgendamento(@PathParam("id") int id, @PathParam("data") Date data_reserva) {
 		if (dao.CancelarAgendamento(id, data_reserva)) {
-			return Response.ok("Sala deletada com sucesso").build();
+			return Response.ok("Reserva deletada com sucesso").build();
 		} 
 		return Response.status(Response.Status.NOT_FOUND).entity("Não foi possível deletar sala").build();	
 	}

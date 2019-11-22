@@ -8,6 +8,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import br.com.agencia.adi.agencia_adi.decorator.Adicionar;
+import br.com.agencia.adi.agencia_adi.decorator.Alterar;
+import br.com.agencia.adi.agencia_adi.decorator.Historico;
+import br.com.agencia.adi.agencia_adi.decorator.UsuarioDecorator;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
 import java.util.Date;
@@ -25,6 +29,7 @@ public class ClienteDAO implements IUsuario {
 	private Statement st;
 	private ResultSet rs;
 	private ArrayList<UsuarioModel> lista = new ArrayList<>();
+	HistoricoDAO historico = new HistoricoDAO();
 	private static final String FRASE_SEGREDO = "41A518402BA6C85B63E8CCC1BC321EE99945A1784CB1D16612CF6F471FEA46836F90601B0E66AF968B821F67747D7844EA030E2F8D8841238724E6AA1A6F4A6B";
 	
 	public ClienteDAO() {
@@ -41,6 +46,8 @@ public class ClienteDAO implements IUsuario {
 			stmt.setBoolean(4, usuario.getAdmin());
 			stmt.execute();
 			stmt.close();
+			Historico decorator = new UsuarioDecorator(new Adicionar());
+			historico.CadastrarHistorico(decorator, usuario.getEmail());
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao cadastrar usuário: " +erro);
 		}
@@ -57,6 +64,8 @@ public class ClienteDAO implements IUsuario {
 			stmt.setInt(4, usuario.getId_user());
 			stmt.execute();
 			stmt.close();
+			Historico decorator = new UsuarioDecorator(new Alterar());
+			historico.CadastrarHistorico(decorator, usuario.getEmail());
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao editar usuário: " +erro);
 		}

@@ -11,6 +11,9 @@ import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import br.com.agencia.adi.agencia_adi.decorator.Deletar;
+import br.com.agencia.adi.agencia_adi.decorator.Historico;
+import br.com.agencia.adi.agencia_adi.decorator.UsuarioDecorator;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import br.com.agencia.adi.agencia_adi.model.NivelPermissao;
 import br.com.agencia.adi.agencia_adi.model.UsuarioModel;
@@ -26,6 +29,7 @@ public class AdmDAO implements IUsuario {
 	private Statement st;
 	private ResultSet rs;
 	private ArrayList<UsuarioModel> lista = new ArrayList<>();
+	HistoricoDAO historico = new HistoricoDAO();
 	private static final String FRASE_SEGREDO = "41A518402BA6C85B63E8CCC1BC321EE99945A1784CB1D16612CF6F471FEA46836F90601B0E66AF968B821F67747D7844EA030E2F8D8841238724E6AA1A6F4A6B";
 	
 	public AdmDAO() {
@@ -158,7 +162,12 @@ public class AdmDAO implements IUsuario {
 			st = conn.createStatement();
 			int deletado = st.executeUpdate(sql);
 			st.close();
-			return (deletado != 0) ? true : false;
+			if (deletado != 0) {
+				Historico decorator = new UsuarioDecorator(new Deletar());
+				historico.CadastrarHistorico(decorator, id);
+				return true; 
+			}
+			return false;
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao deletar usuário: "+erro);
 		}

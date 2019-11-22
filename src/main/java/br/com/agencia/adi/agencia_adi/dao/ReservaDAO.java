@@ -2,6 +2,10 @@ package br.com.agencia.adi.agencia_adi.dao;
 
 import br.com.agencia.adi.agencia_adi.model.ReservaModel;
 import br.com.agencia.adi.agencia_adi.Observer;
+import br.com.agencia.adi.agencia_adi.decorator.Adicionar;
+import br.com.agencia.adi.agencia_adi.decorator.Deletar;
+import br.com.agencia.adi.agencia_adi.decorator.Historico;
+import br.com.agencia.adi.agencia_adi.decorator.ReservaDecorator;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ public class ReservaDAO implements Observer {
 	private PreparedStatement stmt;
 	private Statement st;
 	private ResultSet rs;
+	HistoricoDAO historico = new HistoricoDAO();
 	private ArrayList<ReservaModel> lista = new ArrayList<>();
 	
 	public ReservaDAO()  {
@@ -27,6 +32,8 @@ public class ReservaDAO implements Observer {
 			stmt.setDate(3, reserva.getData_reserva());
 			stmt.execute();
 			stmt.close();
+			Historico decorator = new ReservaDecorator(new Adicionar());
+			historico.CadastrarHistorico(decorator, reserva.getId_sala());
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao cadastrar reserva: " +erro);
 		}
@@ -75,7 +82,12 @@ public class ReservaDAO implements Observer {
 			st = conn.createStatement();
 			int deletado = st.executeUpdate(sql);
 			st.close();
-			return (deletado != 0) ? true : false;
+			if (deletado != 0) {
+				Historico decorator = new ReservaDecorator(new Deletar());
+				historico.CadastrarHistorico(decorator, id);
+				return true;
+			}
+			return false;
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao deletar reserva: "+erro);
 		}

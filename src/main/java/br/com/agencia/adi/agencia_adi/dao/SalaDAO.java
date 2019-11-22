@@ -3,6 +3,11 @@ package br.com.agencia.adi.agencia_adi.dao;
 import br.com.agencia.adi.agencia_adi.model.SalaModel;
 import br.com.agencia.adi.agencia_adi.Observable;
 import br.com.agencia.adi.agencia_adi.Observer;
+import br.com.agencia.adi.agencia_adi.decorator.Adicionar;
+import br.com.agencia.adi.agencia_adi.decorator.Alterar;
+import br.com.agencia.adi.agencia_adi.decorator.Deletar;
+import br.com.agencia.adi.agencia_adi.decorator.Historico;
+import br.com.agencia.adi.agencia_adi.decorator.SalaDecorator;
 import br.com.agencia.adi.agencia_adi.factory.ConectaBanco;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +20,7 @@ public class SalaDAO implements Observable  {
 	private ResultSet rs;
 	private ArrayList<SalaModel> lista = new ArrayList<>();
 	private ArrayList<Observer> observers = new ArrayList<>();
+	HistoricoDAO historico = new HistoricoDAO();
 	
 	public SalaDAO() {
 		conn = new ConectaBanco().getConexao();
@@ -31,6 +37,8 @@ public class SalaDAO implements Observable  {
 			stmt.setString(5, sala.getAndar_sala());
 			stmt.execute();
 			stmt.close();
+			Historico decorator = new SalaDecorator(new Adicionar());
+			historico.CadastrarHistorico(decorator, sala.getNome_sala());
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao cadastrar sala: " +erro);
 		}
@@ -49,6 +57,8 @@ public class SalaDAO implements Observable  {
 			stmt.setInt(6, sala.getId_sala());
 			stmt.execute();
 			stmt.close();
+			Historico decorator = new SalaDecorator(new Alterar());
+			historico.CadastrarHistorico(decorator, sala.getNome_sala());
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao editar sala: " +erro);
 		}
@@ -62,7 +72,12 @@ public class SalaDAO implements Observable  {
 			int deletado = st.executeUpdate(sql);
 			st.close();
 			 this.notifyObservers(id);
-			return (deletado != 0) ? true : false;
+			if (deletado != 0) {
+				Historico decorator = new SalaDecorator(new Deletar());
+				historico.CadastrarHistorico(decorator, id);
+				return true; 
+			}
+			return false;
 		} catch(Exception erro) {
 			throw new RuntimeException("Erro ao deletar sala: "+erro);
 		}

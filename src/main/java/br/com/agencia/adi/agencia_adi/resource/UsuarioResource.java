@@ -86,7 +86,7 @@ public class UsuarioResource {
 	@Path("user/authentication")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response fazerLogin(UsuarioModel usuario){
+	public Response fazerLogin(UsuarioModel usuario){		
 		dao.Iusuario = tipo;
 		try {
 			if (dao.Login(usuario) == true) {
